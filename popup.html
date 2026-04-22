@@ -3,132 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <title>PWA-Only Blocker</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --paper: #f4efe6;
     --ink: #1c1a17;
-    --ink-soft: #4a453d;
     --accent: #8b2e1f;
-    --rule: rgba(28,26,23,0.12);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    width: 280px;
+    width: 220px;
     background: var(--paper);
-    color: var(--ink);
-    font-family: "Fraunces", serif;
-    padding: 20px;
+    padding: 14px;
   }
-  .top {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 10px;
-  }
-  h1 {
-    font-weight: 300;
-    font-size: 28px;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin-bottom: 18px;
-  }
-  h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
-  .row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 0;
-    border-top: 1px solid var(--rule);
-  }
-  .label {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-  .value { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500; }
-  .switch {
-    width: 44px; height: 24px;
-    background: var(--ink-soft);
-    border: none; cursor: pointer; position: relative;
-    transition: background 0.18s;
-    padding: 0;
-  }
-  .switch::after {
-    content: ""; position: absolute; top: 3px; left: 3px;
-    width: 18px; height: 18px; background: var(--paper);
-    transition: transform 0.18s;
-  }
-  .switch.on { background: var(--accent); }
-  .switch.on::after { transform: translateX(20px); }
-  button.open {
+  button {
     width: 100%;
-    margin-top: 14px;
     font-family: "JetBrains Mono", monospace;
     font-size: 11px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding: 12px;
+    padding: 14px;
     border: 1px solid var(--ink);
     background: var(--ink);
     color: var(--paper);
     cursor: pointer;
-    transition: background 0.18s;
+    transition: background 0.18s, border-color 0.18s;
   }
-  button.open:hover { background: var(--accent); border-color: var(--accent); }
-  .count {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
-    color: var(--ink-soft);
-    padding: 10px 0 2px;
+  button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
   }
 </style>
 </head>
 <body>
-  <div class="top">PWA-Only Blocker</div>
-  <h1>A small <em>pause</em>.</h1>
-
-  <div class="row">
-    <span class="label">Blocker</span>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span class="value" id="switchLabel">—</span>
-      <button class="switch" id="switch" aria-label="toggle"></button>
-    </div>
-  </div>
-  <div class="row">
-    <span class="label">Domains</span>
-    <span class="value" id="count">—</span>
-  </div>
-  <button class="open" id="openOptions">Manage list</button>
-
-<script>
-  const switchEl = document.getElementById("switch");
-  const switchLabel = document.getElementById("switchLabel");
-  const countEl = document.getElementById("count");
-
-  let state = { enabled: true, blockedDomains: [] };
-
-  function render() {
-    switchEl.classList.toggle("on", state.enabled);
-    switchLabel.textContent = state.enabled ? "Active" : "Off";
-    countEl.textContent = String(state.blockedDomains.length);
-  }
-
-  switchEl.addEventListener("click", async () => {
-    state.enabled = !state.enabled;
-    await chrome.runtime.sendMessage({ type: "SET_ENABLED", enabled: state.enabled });
-    render();
-  });
-
-  document.getElementById("openOptions").addEventListener("click", () => {
-    chrome.runtime.openOptionsPage();
-  });
-
-  chrome.runtime.sendMessage({ type: "GET_STATE" }, (s) => {
-    if (s) { state = s; render(); }
-  });
-</script>
+  <button id="openOptions">Manage list</button>
+<script src="popup.js"></script>
 </body>
 </html>
